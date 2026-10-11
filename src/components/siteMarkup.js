@@ -25,7 +25,7 @@ export function renderSite() {
     <div class="progress" aria-hidden="true"></div>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="qrrrv — наверх"><span class="brand-mark">q</span><span>qrrrv</span></a>
-      <nav aria-label="Основная навигация"><a href="#about">обо мне</a><a href="#projects">проекты</a><a class="nav-cta" href="${profile.profileUrl}" target="_blank" rel="noreferrer">github ↗</a></nav>
+      <nav aria-label="Основная навигация"><a href="#about">обо мне</a><a href="#projects">проекты</a><a href="#activity">активность</a><a class="nav-cta" href="${profile.profileUrl}" target="_blank" rel="noreferrer">github ↗</a></nav>
     </header>
 
     <main id="top">
@@ -67,15 +67,24 @@ export function renderSite() {
         <p class="empty-state" id="empty-state" hidden>Ничего не найдено. Попробуй другое слово.</p>
       </div></section>
 
+      <section class="band band--light" id="activity" aria-labelledby="activity-title"><div class="site-shell">
+        <span class="section-label">04 / 08 · <i class="live"></i>live</span>
+        <h2 class="big" id="activity-title">ЖИВАЯ<br><span class="hl">АКТИВНОСТЬ</span></h2>
+        <div class="activity">
+          <div><div class="bars" id="activity-bars" aria-label="Активность за 14 дней"></div><p class="activity__sum" id="activity-sum"></p></div>
+          <ol class="feed" id="activity-feed" aria-live="polite"><li class="feed__note">загружаю события с GitHub…</li></ol>
+        </div>
+      </div></section>
+
       <section class="band band--violet" aria-labelledby="manifesto-title"><div class="site-shell manifesto">
-        <span class="section-label">04 / 08 · manifesto</span>
+        <span class="section-label">05 / 08 · manifesto</span>
         <h2 class="big" id="manifesto-title">Не делаю<br><span class="hl">вид, что знаю</span><br>всё.</h2>
         <p>Проекты разные — от Android-клиентов и Telegram-модулей до сайтов и утилит. Общий знаменатель один: любопытство и желание проверить идею кодом.</p>
         <div class="manifesto__glyph" aria-hidden="true">✳</div>
       </div></section>
 
       <section class="band band--pink" aria-labelledby="contact-title"><div class="site-shell contact">
-        <span class="section-label">05 / 08</span>
+        <span class="section-label">06 / 08</span>
         <h2 class="big" id="contact-title">ОТКРОЙ<br><span class="bk">GITHUB.</span></h2>
         <p>Код открыт. Истории проектов — тоже.</p>
         <a class="pill-button pill-button--dark" href="${profile.profileUrl}" target="_blank" rel="noreferrer">перейти в профиль <span>↗</span></a>
