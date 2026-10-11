@@ -1,0 +1,18 @@
+:root {
+  --ink: #111111;
+  --paper: #f5f2ea;
+  --yellow: #ffd400;
+  --pink: #ff76a8;
+  --blue: #79d9ff;
+  --orange: #ff7347;
+  --green: #a8e36b;
+  --white: #fffdf8;
+  --line: 3px solid var(--ink);
+  --shadow: 8px 8px 0 var(--ink);
+  --shadow-small: 4px 4px 0 var(--ink);
+  --display: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  --body: "Trebuchet MS", Arial, sans-serif;
+  --mono: "Courier New", monospace;
+  --max: 1380px;
+  --pad: clamp(1.15rem, 3.2vw, 4rem);
+}
