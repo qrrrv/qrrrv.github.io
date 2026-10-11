@@ -1,17 +1,16 @@
 :root {
+  --white: #fff;
+  --black: #0b0b0f;
   --ink: #f8f8fb;
-  --ink-dark: #111116;
-  --muted: #cbc9d7;
-  --violet: #6e5be8;
-  --violet-deep: #322469;
+  --muted: #d4d2e0;
+  --violet: #5b46e8;
   --violet-hot: #a99cff;
-  --paper: #e5e3e7;
-  --glass: rgba(60, 56, 78, .55);
-  --glass-light: rgba(255, 255, 255, .13);
+  --pink: #f7a8f7;
   --line: 1px solid rgba(255, 255, 255, .78);
-  --display: "Arial Black", "Helvetica Neue", Arial, sans-serif;
-  --body: "Space Grotesk", Arial, sans-serif;
+  --hard: 2px solid var(--black);
+  --display: "Inter", "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  --body: "Inter", Arial, sans-serif;
   --mono: "DM Mono", "Courier New", monospace;
   --max: 1440px;
-  --pad: clamp(1.25rem, 4.4vw, 5rem);
+  --pad: clamp(1rem, 4.4vw, 5rem);
 }

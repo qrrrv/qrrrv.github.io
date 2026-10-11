@@ -5,6 +5,8 @@ const languages = [...new Set(projects.map((project) => project.language).filter
 const totalStars = projects.reduce((sum, project) => sum + project.stars, 0);
 const totalForks = projects.reduce((sum, project) => sum + project.forks, 0);
 
+const ticker = ["GITHUB","CODE","MODULES","ANDROID","PYTHON","OPEN SOURCE"].map((w) => `<span>${w}</span><i>✳</i>`).join("");
+
 function projectCard(project, index) {
   const tags = [project.language, ...project.topics].filter(Boolean).slice(0, 3);
   return `
@@ -49,10 +51,13 @@ export function renderSite() {
             <div class="hero__profile"><img src="${profile.avatarUrl}" alt="" /><span>${profile.displayName}<br><small>@${profile.username}</small></span></div>
             <h1 id="hero-title">НЕО-<br><span>БРУТ</span></h1>
             <p class="hero__lead">Публичная полка проектов <strong>${profile.username}</strong>: приложения, модули, сайты и эксперименты, собранные в одном месте.</p>
+            <div class="hero__tiles" aria-hidden="true">${projects.slice(0, 4).map((p, i) => `<div class="tile tile--${i}"><b>${p.name.replace(/[^A-Za-zА-Яа-я0-9]+/g, " ").trim().split(" ")[0].slice(0, 8).toUpperCase()}</b><small>${p.language}</small></div>`).join("")}</div>
             <div class="hero__footer"><a class="pill-button" href="#projects">Смотреть проекты <span>→</span></a><span class="hero__hint">scroll / drag / explore</span></div>
           </div>
           <div class="hero__stamp" aria-hidden="true">✳<br><small>CODE<br>WITH<br>ATTITUDE</small></div>
         </section>
+
+        <div class="ticker" aria-hidden="true"><div class="ticker__track">${ticker.repeat(4)}</div></div>
 
         <section class="intro" id="about" aria-labelledby="about-title">
           <div class="section-label">02 / 08</div>
