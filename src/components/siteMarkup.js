@@ -6,17 +6,25 @@ const totalStars = projects.reduce((s, p) => s + p.stars, 0);
 const totalForks = projects.reduce((s, p) => s + p.forks, 0);
 const year = new Date().getFullYear();
 const tick = (words) => words.map((w) => `<span>${w}</span><i>✳</i>`).join("").repeat(4);
+const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 
 function projectRow(p, i) {
-  const tags = [p.language, ...p.topics].filter(Boolean).slice(0, 2);
+  const title = escapeHTML(p.title || p.name);
+  const name = escapeHTML(p.name);
+  const summary = escapeHTML(p.summary);
+  const language = escapeHTML(p.language);
+  const searchText = escapeHTML(`${p.name} ${p.title || p.name} ${p.summary} ${p.language} ${(p.topics || []).join(" ")}`.toLowerCase());
+  const initial = [...title.trim()][0]?.toUpperCase() || "✳";
+  const tags = [p.language, ...(p.topics || [])].filter(Boolean).slice(0, 2).map(escapeHTML);
   return `
-    <article class="project-card reveal" data-name="${p.name.toLowerCase()}" data-language="${p.language}">
+    <article class="project-card reveal" data-name="${searchText}" data-language="${language}" data-updated="${escapeHTML(p.updated || "")}" data-stars="${Number(p.stars) || 0}">
       <span class="row__n">${String(i + 1).padStart(2, "0")}</span>
-      <div class="row__main"><h3>${p.title}</h3><p>${p.summary}</p></div>
+      <div class="project-avatar" aria-hidden="true" style="--avatar-hue:${(i * 47 + 12) % 360}"><span>${initial}</span><img src="${profile.avatarUrl}" alt="" loading="lazy" /></div>
+      <div class="row__main"><h3>${title}</h3><p>${summary}</p></div>
       <div class="project-tags">${tags.map((t) => `<span>${t}</span>`).join("")}</div>
-      <span class="row__m">★ ${p.stars} · ↗ ${p.forks}</span>
+      <span class="row__m"><span>★ ${p.stars} · ↗ ${p.forks}</span><small>обновлён ${p.updated || "—"}</small></span>
       <span class="row__go" aria-hidden="true">↗</span>
-      <a class="project-hit" href="${p.url}" target="_blank" rel="noreferrer" aria-label="Открыть проект ${p.title} на GitHub">открыть</a>
+      <a class="project-hit" href="${escapeHTML(p.url)}" target="_blank" rel="noreferrer" aria-label="Открыть проект ${name} на GitHub">открыть</a>
     </article>`;
 }
 
@@ -62,7 +70,7 @@ export function renderSite() {
       <section class="band band--dark" id="projects" aria-labelledby="projects-title"><div class="site-shell">
         <span class="section-label">03 / 08</span>
         <h2 class="big" id="projects-title">ВСЕ<br><span class="ol ol--pink">ПРОЕКТЫ</span></h2>
-        <div class="project-tools"><label class="search-box"><span>⌕</span><input id="project-search" type="search" placeholder="найти проект..." aria-label="Найти проект" /></label><div class="filter-list" role="group" aria-label="Фильтр по языку"><button class="filter-button is-active" type="button" data-filter="all">все</button>${languages.map((l) => `<button class="filter-button" type="button" data-filter="${l}">${l}</button>`).join("")}</div></div>
+        <div class="project-tools"><label class="search-box"><span>⌕</span><input id="project-search" type="search" placeholder="найти проект..." aria-label="Найти проект" /></label><div class="filter-list" role="group" aria-label="Фильтр по языку"><button class="filter-button is-active" type="button" data-filter="all">все</button>${languages.map((l) => `<button class="filter-button" type="button" data-filter="${l}">${l}</button>`).join("")}</div><div class="project-actions"><label class="sort-box">сортировка <select id="project-sort" aria-label="Сортировать проекты"><option value="recent">свежие</option><option value="stars">по звёздам</option><option value="name">по имени</option></select></label><button class="surprise-button" id="surprise-project" type="button">удиви меня <span>✳</span></button></div></div>
         <div class="projects-grid" id="projects-grid">${projects.map(projectRow).join("")}</div>
         <p class="empty-state" id="empty-state" hidden>Ничего не найдено. Попробуй другое слово.</p>
       </div></section>
