@@ -1,13 +1,11 @@
 @media (max-width: 900px) {
-  .header-date { display: none; } .hero__stamp { width: 6rem; height: 6rem; font-size: 2rem; top: 8%; } .hero__stamp small { font-size: .42rem; }
-  .intro { grid-template-columns: 1fr; gap: 1.2rem; } .stats-strip { grid-template-columns: repeat(2, 1fr); }
-  .projects-grid { grid-template-columns: repeat(2, 1fr); } .projects__heading { grid-template-columns: 1fr; } .projects__heading p { justify-self: start; }
-  .project-tools { flex-direction: column; align-items: stretch; } .filter-list { justify-content: start; } .manifesto { grid-template-columns: 1fr; }
+  .hero__row, .about { grid-template-columns: 1fr; gap: 2.5rem; } .hero__card { justify-self: start; margin-top: 3rem; }
+  .stats { grid-template-columns: repeat(2, 1fr); } .stats div:nth-child(2) { border-right: 0; } .stats div:nth-child(-n+2) { border-bottom: 2px solid var(--black); }
+  .project-tools { flex-direction: column; align-items: stretch; } .filter-list { justify-content: start; }
+  .project-card { grid-template-columns: 2.5rem 1fr 3rem; } .project-tags, .row__m { display: none; } .row__go { width: 2.6rem; height: 2.6rem; }
 }
 @media (max-width: 620px) {
-  .site-shell { padding: 0 .9rem; } .site-header nav { gap: .7rem; font-size: .58rem; } .brand { font-size: 1.15rem; }
-  .hero__glass { border-radius: 1.4rem; } .hero__topline { font-size: .55rem; } .hero__stamp { right: 1rem; top: 4%; } .hero__footer { flex-wrap: wrap; gap: .8rem; } .hero__hint { font-size: .55rem; }
-  .hero__tiles { grid-template-columns: repeat(2, 1fr); } .tile b { font-size: clamp(2.4rem, 14vw, 4.5rem); }
-  .projects-grid { grid-template-columns: 1fr; } .project-card { min-height: 21rem; } .project-card h3 { font-size: 2rem; }
-  .stats-strip { margin-bottom: 4rem; } .intro { padding: 4rem 0 3rem; } footer { flex-wrap: wrap; font-size: .56rem; }
+  .site-header nav a:not(.nav-cta) { display: none; } .hero { padding-top: 5.5rem; } .hero__topline { font-size: .55rem; }
+  .hero__stamp { width: 6.5rem; height: 6.5rem; top: -3.5rem; right: -.8rem; } .hero__card { rotate: 2deg; }
+  .contact__arrow { bottom: 9rem; opacity: .9; } footer { flex-wrap: wrap; font-size: .6rem; }
 }

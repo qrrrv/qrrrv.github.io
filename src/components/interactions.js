@@ -5,13 +5,11 @@ export function initInteractions() {
   const emptyState = document.querySelector("#empty-state");
   let activeFilter = "all";
 
-  const renderProjects = () => {
+  const apply = () => {
     const query = search?.value.trim().toLowerCase() || "";
     let visible = 0;
     cards.forEach((card) => {
-      const matchesFilter = activeFilter === "all" || card.dataset.language === activeFilter;
-      const matchesSearch = !query || card.dataset.name.includes(query);
-      const show = matchesFilter && matchesSearch;
+      const show = (activeFilter === "all" || card.dataset.language === activeFilter) && (!query || card.dataset.name.includes(query));
       card.hidden = !show;
       if (show) visible += 1;
     });
@@ -22,29 +20,20 @@ export function initInteractions() {
     buttons.forEach((item) => item.classList.remove("is-active"));
     button.classList.add("is-active");
     activeFilter = button.dataset.filter;
-    renderProjects();
+    apply();
   }));
-  search?.addEventListener("input", renderProjects);
+  search?.addEventListener("input", apply);
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08 });
+  const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+    if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); }
+  }), { threshold: 0.08 });
   document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
 
-  document.querySelectorAll(".project-card").forEach((card) => {
-    card.addEventListener("mousemove", (event) => {
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty("--rotate-x", `${((event.clientY - rect.top) / rect.height - .5) * -4}deg`);
-      card.style.setProperty("--rotate-y", `${((event.clientX - rect.left) / rect.width - .5) * 4}deg`);
-    });
-    card.addEventListener("mouseleave", () => {
-      card.style.setProperty("--rotate-x", "0deg");
-      card.style.setProperty("--rotate-y", "0deg");
-    });
-  });
+  const progress = document.querySelector(".progress");
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress?.style.setProperty("--p", max > 0 ? scrollY / max : 0);
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 }
