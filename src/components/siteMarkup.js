@@ -1,94 +1,80 @@
-import { services, projects, manifesto } from "../data/content.js";
+import projects from "../data/github-projects.json";
+import { profile } from "../data/profile.js";
 
-const serviceCards = services.map((service) => `
-  <article class="service-card service-card--${service.color} reveal" data-cursor="смотреть">
-    <div class="card-topline"><span>${service.number}</span><span class="card-arrow">↗</span></div>
-    <div>
-      <h3>${service.title}</h3>
-      <p>${service.text}</p>
-    </div>
-    <div class="tag-list">${service.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
-  </article>
-`).join("");
+const languages = [...new Set(projects.map((project) => project.language).filter(Boolean))].sort();
+const totalStars = projects.reduce((sum, project) => sum + project.stars, 0);
+const totalForks = projects.reduce((sum, project) => sum + project.forks, 0);
 
-const projectCards = projects.map((project, index) => `
-  <article class="project-card project-card--${project.color} reveal" data-project="${index}">
-    <div class="project-art" aria-hidden="true">
-      <span class="art-label">${project.type}</span>
-      <span class="art-mark">${project.mark}</span>
-      <span class="art-index">0${index + 1}</span>
-    </div>
-    <div class="project-info">
-      <div><h3>${project.title}</h3><p>${project.type}</p></div>
-      <span class="project-year">${project.year}</span>
-    </div>
-  </article>
-`).join("");
+function projectCard(project, index) {
+  const tags = [project.language, ...project.topics].filter(Boolean).slice(0, 3);
+  return `
+    <article class="project-card reveal" data-name="${project.name.toLowerCase()}" data-language="${project.language}">
+      <div class="project-card__top">
+        <span class="project-index">${String(index + 1).padStart(2, "0")}</span>
+        <span class="project-status">${project.archived ? "архив" : "public"}</span>
+      </div>
+      <div class="project-card__body">
+        <div class="project-symbol" aria-hidden="true">${project.name.slice(0, 1).toUpperCase()}</div>
+        <h3>${project.title}</h3>
+        <p>${project.summary}</p>
+      </div>
+      <div class="project-card__bottom">
+        <div class="project-tags">${tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
+        <div class="project-metrics"><span>★ ${project.stars}</span><span>↗ ${project.forks}</span></div>
+      </div>
+      <a class="project-hit" href="${project.url}" target="_blank" rel="noreferrer" aria-label="Открыть проект ${project.title} на GitHub">открыть проект ↗</a>
+    </article>
+  `;
+}
 
 export function renderSite() {
   return `
     <div class="site-shell">
-      <div class="grain" aria-hidden="true"></div>
-      <header class="site-header" id="top">
-        <a class="wordmark" href="#top" aria-label="BRUTAL / by design — наверх">
-          <span class="wordmark-slash">/</span><span>BRUTAL</span><small>by design</small>
-        </a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-          <span class="sr-only">Открыть меню</span><i></i><i></i>
-        </button>
-        <nav class="primary-nav" id="primary-nav" aria-label="Основная навигация">
-          <a href="#work">работы <span>01</span></a>
-          <a href="#services">что делаем <span>02</span></a>
-          <a href="#about">манифест <span>03</span></a>
+      <div class="noise" aria-hidden="true"></div>
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="qrrrv — наверх"><span class="brand-mark">q</span><span>qrrrv</span></a>
+        <nav aria-label="Основная навигация">
+          <a href="#projects">проекты <sup>01</sup></a>
+          <a href="#about">обо мне <sup>02</sup></a>
+          <a href="${profile.profileUrl}" target="_blank" rel="noreferrer">github ↗</a>
         </nav>
-        <a class="header-cta" href="#contact">давайте шуметь <span>↗</span></a>
+        <span class="header-date">03 / 08<br><small>portfolio</small></span>
       </header>
 
-      <main>
-        <section class="hero section-pad" aria-labelledby="hero-title">
-          <div class="hero-meta"><span>креативная студия / 2024—∞</span><span class="meta-dot"></span><span>Москва · везде</span></div>
-          <div class="hero-layout">
-            <div class="hero-copy">
-              <p class="eyebrow"><span class="eyebrow-marker">✳</span> Дизайн, который нельзя не заметить</p>
-              <h1 id="hero-title">МЕНЬШЕ<br><span>СКУЧНОГО.</span><br>БОЛЬШЕ <em>ВАУ.</em></h1>
-              <p class="hero-intro">Создаём бренды и цифровые продукты, которые выглядят так, будто у них есть что сказать.</p>
-              <a class="button button--dark" href="#work">смотреть работы <span>↓</span></a>
-            </div>
-            <div class="hero-art" aria-label="Абстрактная композиция из цветных форм">
-              <div class="sticker sticker--top">НЕ<br>ПОДОЙДЁТ<br>ВСЕМ</div>
-              <div class="art-orbit"><span></span><span></span><span></span></div>
-              <div class="hero-sun">✳</div>
-              <div class="hero-smile">:—)<br><small>делаем<br>живым</small></div>
-              <div class="hero-caption">BRUTAL<br>IS A<br>CHOICE</div>
-            </div>
+      <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero__backdrop" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="hero__glass">
+            <div class="hero__topline"><span>QYR / GITHUB INDEX</span><span>01—25 / ${new Date().getFullYear()}</span></div>
+            <div class="hero__profile"><img src="${profile.avatarUrl}" alt="" /><span>${profile.displayName}<br><small>@${profile.username}</small></span></div>
+            <h1 id="hero-title">НЕО-<br><span>БРУТ</span></h1>
+            <p class="hero__lead">Публичная полка проектов <strong>${profile.username}</strong>: приложения, модули, сайты и эксперименты, собранные в одном месте.</p>
+            <div class="hero__footer"><a class="pill-button" href="#projects">Смотреть проекты <span>→</span></a><span class="hero__hint">scroll / drag / explore</span></div>
           </div>
-          <div class="scroll-note"><span>листай вниз</span><div class="scroll-line"></div><span>↓</span></div>
+          <div class="hero__stamp" aria-hidden="true">✳<br><small>CODE<br>WITH<br>ATTITUDE</small></div>
         </section>
 
-        <section class="ticker" aria-label="Слоган студии"><div class="ticker-track"><span>NO BORING BRANDS</span><b>✳</b><span>NO BORING BRANDS</span><b>✳</b><span>NO BORING BRANDS</span><b>✳</b><span>NO BORING BRANDS</span></div></section>
-
-        <section class="services section-pad" id="services" aria-labelledby="services-title">
-          <div class="section-heading reveal"><span class="section-number">02 / 04</span><h2 id="services-title">Делаем<br><span>всякое.</span></h2><p>От первого «а что если?» до последнего пикселя. Без шаблонов, зато с мнением.</p></div>
-          <div class="services-grid">${serviceCards}</div>
+        <section class="intro" id="about" aria-labelledby="about-title">
+          <div class="section-label">02 / 08</div>
+          <div class="intro__copy"><h2 id="about-title">Грубый<br><span>снаружи.</span><br>Живой<br>внутри.</h2></div>
+          <div class="intro__text"><p>${profile.bio}. Здесь не витрина ради витрины: каждая карточка ведёт прямо в репозиторий, а описание собрано из его README и GitHub-метаданных.</p><div class="signature">— qrrrv<br><small>builder / tinkerer</small></div></div>
         </section>
 
-        <section class="work section-pad" id="work" aria-labelledby="work-title">
-          <div class="section-heading section-heading--row reveal"><div><span class="section-number">03 / 04</span><h2 id="work-title">Работы,<br><span>за которые</span><br>не стыдно.</h2></div><p>Три проекта, которые мы сделали не «чтобы было», а чтобы стало.</p></div>
-          <div class="projects-grid">${projectCards}</div>
-          <a class="text-link" href="#contact">показать ещё <span>↗</span></a>
+        <section class="stats-strip" aria-label="Статистика профиля"><div><strong>${projects.length}</strong><span>public repos</span></div><div><strong>${languages.length}</strong><span>languages</span></div><div><strong>${totalStars}</strong><span>stars</span></div><div><strong>${totalForks}</strong><span>forks</span></div></section>
+
+        <section class="projects" id="projects" aria-labelledby="projects-title">
+          <div class="projects__heading"><div><div class="section-label">03 / 08</div><h2 id="projects-title">ВСЕ<br><span>ПРОЕКТЫ</span></h2></div><p>25 публичных репозиториев без форков. Листай, фильтруй, открывай код.</p></div>
+          <div class="project-tools"><label class="search-box"><span>⌕</span><input id="project-search" type="search" placeholder="найти проект..." aria-label="Найти проект" /></label><div class="filter-list" role="group" aria-label="Фильтр по языку"><button class="filter-button is-active" type="button" data-filter="all">все</button>${languages.map((language) => `<button class="filter-button" type="button" data-filter="${language}">${language}</button>`).join("")}</div></div>
+          <div class="projects-grid" id="projects-grid">${projects.map(projectCard).join("")}</div>
+          <p class="empty-state" id="empty-state" hidden>Ничего не найдено. Попробуй другое слово.</p>
         </section>
 
-        <section class="manifesto section-pad" id="about" aria-labelledby="manifesto-title">
-          <div class="manifesto-stamp">EST.<br>2017</div>
-          <div class="manifesto-main"><span class="section-number">04 / 04</span><h2 id="manifesto-title">${manifesto.map((line) => `<span>${line}</span>`).join("")}</h2></div>
-          <div class="manifesto-side"><p>Мы верим, что хороший дизайн — это не декорация. Это инструмент, который помогает быть собой громче.</p><span class="scribble">p.s. да, мы<br>действительно<br>любим жёлтый</span></div>
-        </section>
+        <section class="manifesto" aria-labelledby="manifesto-title"><div class="manifesto__side section-label">04 / 08<br><span>manifesto</span></div><div><h2 id="manifesto-title">Не делаю<br><span>вид, что знаю</span><br>всё.</h2><p>Проекты разные — от Android-клиентов и Telegram-модулей до сайтов и утилит. Общий знаменатель один: любопытство и желание проверить идею кодом.</p></div><div class="manifesto__glyph">✳</div></section>
 
-        <section class="contact section-pad" id="contact" aria-labelledby="contact-title">
-          <div class="contact-card reveal"><span class="contact-burst" aria-hidden="true">✳</span><p class="eyebrow">есть идея? есть повод</p><h2 id="contact-title">ДАВАЙТЕ<br><span>СДЕЛАЕМ</span><br>ГРОМКО.</h2><a class="button button--dark button--large" href="mailto:hello@brutal.design">hello@brutal.design <span>↗</span></a></div>
-          <div class="contact-footer"><span>BRUTAL / by design © 2024</span><a href="#top">наверх ↑</a><span>made with intent</span></div>
-        </section>
+        <section class="contact" aria-labelledby="contact-title"><div class="contact__glass"><div class="section-label">05 / 08</div><h2 id="contact-title">ОТКРОЙ<br><span>GITHUB.</span></h2><p>Код открыт. Истории проектов — тоже.</p><a class="pill-button pill-button--light" href="${profile.profileUrl}" target="_blank" rel="noreferrer">перейти в профиль <span>↗</span></a></div><footer><span>qrrrv / github portfolio</span><a href="#top">наверх ↑</a><span>made in public</span></footer></section>
       </main>
     </div>
   `;
 }
+
+export { projects };

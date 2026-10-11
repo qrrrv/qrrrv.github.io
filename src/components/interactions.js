@@ -1,22 +1,31 @@
 export function initInteractions() {
-  const menuToggle = document.querySelector(".menu-toggle");
-  const nav = document.querySelector(".primary-nav");
-  const navLinks = document.querySelectorAll(".primary-nav a");
+  const cards = [...document.querySelectorAll(".project-card")];
+  const buttons = [...document.querySelectorAll(".filter-button")];
+  const search = document.querySelector("#project-search");
+  const emptyState = document.querySelector("#empty-state");
+  let activeFilter = "all";
 
-  menuToggle?.addEventListener("click", () => {
-    const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
-    menuToggle.setAttribute("aria-expanded", String(!isOpen));
-    nav.classList.toggle("is-open", !isOpen);
-    document.body.classList.toggle("menu-open", !isOpen);
-  });
+  const renderProjects = () => {
+    const query = search?.value.trim().toLowerCase() || "";
+    let visible = 0;
+    cards.forEach((card) => {
+      const matchesFilter = activeFilter === "all" || card.dataset.language === activeFilter;
+      const matchesSearch = !query || card.dataset.name.includes(query);
+      const show = matchesFilter && matchesSearch;
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+    if (emptyState) emptyState.hidden = visible !== 0;
+  };
 
-  navLinks.forEach((link) => link.addEventListener("click", () => {
-    menuToggle?.setAttribute("aria-expanded", "false");
-    nav?.classList.remove("is-open");
-    document.body.classList.remove("menu-open");
+  buttons.forEach((button) => button.addEventListener("click", () => {
+    buttons.forEach((item) => item.classList.remove("is-active"));
+    button.classList.add("is-active");
+    activeFilter = button.dataset.filter;
+    renderProjects();
   }));
+  search?.addEventListener("input", renderProjects);
 
-  const revealItems = document.querySelectorAll(".reveal");
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -24,27 +33,18 @@ export function initInteractions() {
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.14 });
-  revealItems.forEach((item) => observer.observe(item));
+  }, { threshold: 0.08 });
+  document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
 
   document.querySelectorAll(".project-card").forEach((card) => {
     card.addEventListener("mousemove", (event) => {
       const rect = card.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 8;
-      const y = ((event.clientY - rect.top) / rect.height - 0.5) * -8;
-      card.style.setProperty("--tilt-x", `${y}deg`);
-      card.style.setProperty("--tilt-y", `${x}deg`);
+      card.style.setProperty("--rotate-x", `${((event.clientY - rect.top) / rect.height - .5) * -4}deg`);
+      card.style.setProperty("--rotate-y", `${((event.clientX - rect.left) / rect.width - .5) * 4}deg`);
     });
     card.addEventListener("mouseleave", () => {
-      card.style.setProperty("--tilt-x", "0deg");
-      card.style.setProperty("--tilt-y", "0deg");
+      card.style.setProperty("--rotate-x", "0deg");
+      card.style.setProperty("--rotate-y", "0deg");
     });
   });
-
-  const heroArt = document.querySelector(".hero-art");
-  window.addEventListener("scroll", () => {
-    if (heroArt && window.scrollY < window.innerHeight) {
-      heroArt.style.setProperty("--parallax", `${window.scrollY * 0.08}px`);
-    }
-  }, { passive: true });
 }
